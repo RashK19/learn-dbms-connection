@@ -10,12 +10,20 @@ mydb=mysql.connector.connect(
 
 mycursor=mydb.cursor()
 
-def submit():
+def check_user():
     # print(name.get())
     # print(age.get())
-    sql="INSERT INTO STUDENT (NAME,AGE) VALUES(%s,%s)"
+    sql="SELECT *FROM STUDENT WHERE NAME= %s AND AGE= %s"
     val=(name.get(),age.get())
     mycursor.execute(sql,val)
+    result=mycursor.fetchone()
+
+    if result:
+        welcome_label.config(text="Welcome, " + name.get())
+    else:
+        welcome_label.config(text="Wrong credentials")
+
+
     mydb.commit()
     mydb.close()
     name.set(" ")
@@ -34,6 +42,11 @@ age=tk.IntVar();
 e_name=tk.Entry(root,textvariable=name).place(x=300,y=100)
 e_age=tk.Entry(root,textvariable=age).place(x=300,y=200)
 
-submit=tk.Button(root,text="Submit",command=submit).place(x=250,y=300)
+login_button = tk.Button(root, text="Login", command=check_user)
+login_button.place(x=250,y=300)
+
+# Label to display login result
+welcome_label = tk.Label(root, text="")
+welcome_label.place(x=250,y=400)
 
 root.mainloop()
